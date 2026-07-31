@@ -1,0 +1,207 @@
+# golangci-lint configuration (v2 schema).
+# Adapted from ossf/allstar's .golangci.yml
+# (https://github.com/ossf/allstar/blob/main/.golangci.yml) for scorecard-mcp.
+version: "2"
+run:
+  concurrency: 6
+linters:
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - copyloopvar
+    - dogsled
+    - durationcheck
+    - err113
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - forbidigo
+    - gocheckcompilerdirectives
+    - gochecknoinits
+    - gochecksumtype
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - goheader
+    # manage use of replace, retract and exclude directives
+    # https://golangci-lint.run/usage/linters/#gomoddirectives
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    - lll
+    - loggercheck
+    - makezero
+    - mirror
+    - misspell
+    - musttag
+    - nakedret
+    - nestif
+    - nilerr
+    - nilnesserr
+    - noctx
+    - nolintlint
+    - paralleltest
+    - predeclared
+    - protogetter
+    - reassign
+    - recvcheck
+    - rowserrcheck
+    - spancheck
+    - sqlclosecheck
+    - staticcheck
+    - testableexamples
+    - testifylint
+    - thelper
+    - tparallel
+    - unconvert
+    - usestdlibvars
+    - usetesting
+    - whitespace
+    - wrapcheck
+    - zerologlint
+  disable:
+    - exhaustruct # initializing every struct makes tests longer without much benefit
+    - testpackage # tests don't need their own package
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    exhaustive:
+      # https://golangci-lint.run/usage/linters/#exhaustive
+      default-signifies-exhaustive: true
+    forbidigo:
+      forbid:
+        - pattern: ^fmt\.Print.*$
+          msg: Do not commit print statements. Output to stdout is the MCP stdio transport channel and must not be corrupted.
+    gocritic:
+      disable-all: true
+      enabled-checks:
+        - appendAssign
+        - argOrder
+        - badCall
+        - badCond
+        - caseOrder
+        - codegenComment
+        - commentedOutCode
+        - deprecatedComment
+        - dupArg
+        - dupBranchBody
+        - dupCase
+        - dupSubExpr
+        - exitAfterDefer
+        - flagDeref
+        - flagName
+        - mapKey
+        - nilValReturn
+        - octalLiteral
+        - offBy1
+        - sloppyLen
+        - sloppyTypeAssert
+        - weakCond
+        - appendCombine
+        - hugeParam
+        - rangeExprCopy
+        - rangeValCopy
+        - assignOp
+        - boolExprSimplify
+        - captLocal
+        - commentedOutImport
+        - commentFormatting
+        - defaultCaseOrder
+        - docStub
+        - elseif
+        - emptyFallthrough
+        - hexLiteral
+        - ifElseChain
+        - methodExprCall
+        - newDeref
+        - regexpMust
+        - singleCaseSwitch
+        - switchTrue
+        - typeAssertChain
+        - typeSwitchVar
+        - underef
+        - unlabelStmt
+        - unlambda
+        - unslice
+        - valSwap
+        - wrapperFunc
+        - builtinShadow
+        - importShadow
+        - initClause
+        - nestingReduce
+        - paramTypeCombine
+        - ptrToRefParam
+        - typeUnparen
+        - unnecessaryBlock
+    godox:
+      keywords:
+        - BUG
+        - FIXME
+        - HACK
+    nolintlint:
+      # `//nolint` should mention specific linter such as `//nolint:my-linter`
+      # Overly broad directives can hide unrelated issues
+      require-specific: true
+    wrapcheck:
+      # Only require wrapping errors that cross the module boundary; errors from
+      # our own internal packages already carry actionable context.
+      ignore-package-globs:
+        - github.com/uwu-tools/scorecard-mcp/**
+      ignore-interface-regexps:
+        - \.Provider$
+  exclusions:
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: '(.+)_test\.go'
+        linters:
+          - err113
+          - errcheck
+          - funlen
+          - goconst
+          - gocyclo
+          - lll
+          - wrapcheck
+issues:
+  # Maximum issues count per one linter. Set to 0 to disable.
+  max-issues-per-linter: 0
+  # Maximum count of issues with the same text. Set to 0 to disable.
+  max-same-issues: 0
+  new-from-rev: ""
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/ossf/scorecard)
+        - prefix(github.com/uwu-tools/scorecard-mcp)
+  exclusions:
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+    generated: lax
