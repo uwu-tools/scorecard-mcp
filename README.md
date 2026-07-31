@@ -1,5 +1,11 @@
 # scorecard-mcp
 
+[![ci](https://github.com/uwu-tools/scorecard-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/uwu-tools/scorecard-mcp/actions/workflows/ci.yml)
+[![lint](https://github.com/uwu-tools/scorecard-mcp/actions/workflows/lint.yml/badge.svg)](https://github.com/uwu-tools/scorecard-mcp/actions/workflows/lint.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/uwu-tools/scorecard-mcp/badge)](https://scorecard.dev/viewer/?uri=github.com/uwu-tools/scorecard-mcp)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-fbab2c.svg)](CODE_OF_CONDUCT.md)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
 An [MCP](https://modelcontextprotocol.io) (Model Context Protocol) server for
 [OpenSSF Scorecard](https://github.com/ossf/scorecard). It exposes Scorecard's
 security-posture data to MCP clients (Claude Desktop/Code, VS Code, and others)
@@ -138,6 +144,15 @@ golangci-lint run ./...
   behind the same `ResultProvider` seam.
 - **Streamable HTTP transport** for hosted/mixed environments.
 - **Upstreaming** as an in-tree `scorecard mcp` subcommand in `ossf/scorecard`.
+
+## Community
+
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Contributing](CONTRIBUTING.md) (including the DCO sign-off requirement)
+- [Security Policy](SECURITY.md)
+- [Support](SUPPORT.md)
+- [Maintainers](MAINTAINERS.md)
+- [Changelog](CHANGELOG.md)
 
 ## License
 

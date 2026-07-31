@@ -1,0 +1,24 @@
+# .project/darnit.yaml - Darnit Extension
+#
+# Extension fields for security tooling (OpenSSF Baseline, etc.)
+# Standard CNCF .project fields are in project.yaml
+
+slug: scorecard-mcp
+project_lead: "@justaugustus"
+cncf_slack_channel: ""
+package_managers: {}
+version: "1.0"
+controls: {}
+context:
+  has_subprojects: false
+  # Pre-1.0; no tagged releases or published binaries yet.
+  has_releases: false
+  is_library: false
+  has_compiled_assets: false
+  ci_provider: github
+  platform: github
+  maintainers:
+    - "@justaugustus"
+    - "@uwu-tools/scorecard-mcp-maintainers"
+  security_contact: https://github.com/uwu-tools/scorecard-mcp/security/advisories/new
+  governance_model: bdfl
