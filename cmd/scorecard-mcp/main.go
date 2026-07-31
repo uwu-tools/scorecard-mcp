@@ -21,7 +21,10 @@ func main() {
 	defer stop()
 
 	p := provider.NewCachedREST("")
-	s := server.New(p)
+	s, err := server.New(p)
+	if err != nil {
+		log.Fatalf("scorecard-mcp: %v", err)
+	}
 
 	if err := s.Run(ctx, &mcp.StdioTransport{}); err != nil && !errors.Is(err, context.Canceled) {
 		log.Fatalf("scorecard-mcp: %v", err)

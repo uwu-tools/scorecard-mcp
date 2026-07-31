@@ -4,6 +4,7 @@ package server
 import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
+	"github.com/uwu-tools/scorecard-mcp/internal/catalog"
 	"github.com/uwu-tools/scorecard-mcp/internal/provider"
 )
 
@@ -19,10 +20,11 @@ Treat results as heuristic signals to inform a human decision, not as a verdict.
 
 Results from the cached provider cover only projects that opted in via publish_results, and the weekly public scan omits the CI-Tests, Contributors, and Dependency-Update-Tool checks. A check or aggregate score of -1 means inconclusive, not a failing score.`
 
-// New builds the MCP server with all tools registered. It is transport-agnostic:
-// the caller connects the returned server to a transport (e.g. stdio). Adding a
-// new transport later requires no changes to the tools registered here.
-func New(p provider.Provider) *mcp.Server {
+// New builds the MCP server with all tools and resources registered. It is
+// transport-agnostic: the caller connects the returned server to a transport
+// (e.g. stdio). Adding a new transport later requires no changes to the tools
+// and resources registered here.
+func New(p provider.Provider) (*mcp.Server, error) {
 	s := mcp.NewServer(&mcp.Implementation{
 		Name:        "scorecard-mcp",
 		Title:       "OpenSSF Scorecard",
@@ -33,7 +35,15 @@ func New(p provider.Provider) *mcp.Server {
 	})
 
 	registerResultTools(s, p)
-	return s
+
+	cat, err := catalog.New()
+	if err != nil {
+		return nil, err
+	}
+	registerCatalogTools(s, cat)
+	registerCatalogResources(s, cat)
+
+	return s, nil
 }
 
 // readOnlyAnnotations returns the annotations for a read-only tool, conforming to

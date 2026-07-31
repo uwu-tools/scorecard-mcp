@@ -1,7 +1,7 @@
 ## 1. Project scaffolding
 
 - [x] 1.1 Initialize the Go module, matching the Scorecard repo's Go toolchain version to avoid CI friction
-- [ ] 1.2 Add dependencies: `github.com/modelcontextprotocol/go-sdk` and `github.com/ossf/scorecard/v5` (go-sdk v1.7.0 added; scorecard/v5 v5.5.0 pending with the check catalog)
+- [x] 1.2 Add dependencies: `github.com/modelcontextprotocol/go-sdk` v1.7.0 and `github.com/ossf/scorecard/v5` v5.5.0
 - [x] 1.3 Lay out packages so MCP-SDK usage is isolated under `cmd/` and `internal/` (drop-in as `cmd/mcp` upstream): `internal/model`, `internal/provider`, `internal/scorecardref`, `internal/server`, `cmd/scorecard-mcp`
 - [ ] 1.4 Add `LICENSE` (Apache-2.0) and a `.golangci.yml` aligned with the Scorecard project (LICENSE added; `.golangci.yml` pending)
 
@@ -25,10 +25,10 @@
 
 ## 5. Check catalog (offline)
 
-- [ ] 5.1 Integrate `github.com/ossf/scorecard/v5/docs/checks` (`checks.Read()`); map to catalog entries (name, short, risk, tags, supported platforms, doc URL, experimental flag)
-- [ ] 5.2 Implement `list_checks` and `explain_check` tools, including the unknown-check-name error path
-- [ ] 5.3 Implement documentation resources: `scorecard://checks` index and the `scorecard://checks/{name}` template
-- [ ] 5.4 Unit tests for list/explain/resources and catalog-version consistency
+- [x] 5.1 Integrate `github.com/ossf/scorecard/v5/docs/checks` (`checks.Read()`); map to catalog entries (name, short, risk, tags, supported platforms, doc URL, experimental flag)
+- [x] 5.2 Implement `list_checks` and `explain_check` tools, including the unknown-check-name error path
+- [x] 5.3 Implement documentation resources: `scorecard://checks` index and the `scorecard://checks/{name}` template
+- [x] 5.4 Unit tests for list/explain and catalog-version consistency (resource handlers covered via the integration smoke test)
 
 ## 6. MCP server runtime
 
