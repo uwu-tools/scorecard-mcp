@@ -9,8 +9,8 @@ on:
   # Run superlinter on pull request events
   pull_request:
 
-# Declare default permissions as read-only
-permissions: read-all
+# Declare default permissions as none
+permissions: {}
 
 jobs:
   super-linter:

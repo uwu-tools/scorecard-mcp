@@ -7,8 +7,8 @@ on:
       - main
   pull_request:
 
-# Declare default permissions as read-only
-permissions: read-all
+# Declare default permissions as none
+permissions: {}
 
 jobs:
   build-test:
