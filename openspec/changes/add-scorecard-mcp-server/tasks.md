@@ -61,12 +61,12 @@
 
 ## 10. Documentation and distribution
 
-- [ ] 10.1 README: what it is, install, MCP client (stdio) configuration, example tool calls, and the cached-data caveats/attribution
-- [ ] 10.2 Provide a client config example (e.g. `.mcp.json` / Claude Desktop connector entry)
-- [ ] 10.3 Add goreleaser/ko config to build a single static binary (may defer if scope-limited)
+- [x] 10.1 README: what it is, install, MCP client (stdio) configuration, example tool calls, and the cached-data caveats/attribution
+- [x] 10.2 Provide a client config example (Claude `.mcp.json` and VS Code `.vscode/mcp.json` entries in the README)
+- [ ] 10.3 Add goreleaser/ko config to build a single static binary (deferred; aligns with upstreaming)
 
 ## 11. Change closeout
 
-- [ ] 11.1 `openspec validate add-scorecard-mcp-server --strict` passes against the implemented behavior
-- [ ] 11.2 Update `AGENTS.md`/README if any convention changed during implementation
+- [x] 11.1 `openspec validate add-scorecard-mcp-server --strict` passes against the implemented behavior
+- [x] 11.2 Update `AGENTS.md`/README if any convention changed during implementation (README added)
 - [ ] 11.3 Archive the OpenSpec change (`openspec archive add-scorecard-mcp-server`) once implemented and merged
