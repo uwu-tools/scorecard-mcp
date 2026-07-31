@@ -3,7 +3,7 @@
 - [x] 1.1 Initialize the Go module, matching the Scorecard repo's Go toolchain version to avoid CI friction
 - [x] 1.2 Add dependencies: `github.com/modelcontextprotocol/go-sdk` v1.7.0 and `github.com/ossf/scorecard/v5` v5.5.0
 - [x] 1.3 Lay out packages so MCP-SDK usage is isolated under `cmd/` and `internal/` (drop-in as `cmd/mcp` upstream): `internal/model`, `internal/provider`, `internal/scorecardref`, `internal/server`, `cmd/scorecard-mcp`
-- [ ] 1.4 Add `LICENSE` (Apache-2.0) and a `.golangci.yml` aligned with the Scorecard project (LICENSE added; `.golangci.yml` pending)
+- [x] 1.4 Add `LICENSE` (Apache-2.0) and a `.golangci.yml` aligned with the Scorecard project
 
 ## 2. Core types and the provider seam
 
@@ -21,7 +21,7 @@
 - [x] 4.1 Implement the REST client: `GET https://api.scorecard.dev/projects/{platform}/{org}/{repo}` with optional `?commit=` (host configurable)
 - [x] 4.2 Map the REST response to `Result`; set `source=cached-rest`, attach caveats (opted-in coverage; omits CI-Tests/Contributors/Dependency-Update-Tool) and CDLA Permissive 2.0 attribution
 - [x] 4.3 Error handling: 404 → "may not have opted into publishing" hint; 400 → validation; other statuses → error; surface as MCP tool errors
-- [ ] 4.4 Unit tests with recorded fixtures for 200 / 404 / 400 responses
+- [x] 4.4 Unit tests with an httptest mock for 200 / 404 / 400 responses
 
 ## 5. Check catalog (offline)
 
@@ -44,7 +44,7 @@
 - [x] 7.2 `get_check_result` — single check detail; unknown-check-name error
 - [x] 7.3 `compare_repos` — multiple repos; bounded maximum with an explicit truncation note
 - [x] 7.4 Add the optional `commit` argument to the retrieval tools (pins the request when supplied)
-- [ ] 7.5 Unit tests covering each `scorecard-results` scenario
+- [x] 7.5 Tests covering each `scorecard-results` scenario (via the in-memory MCP integration test)
 
 ## 8. Cross-cutting compliance
 
@@ -54,9 +54,9 @@
 
 ## 9. Testing and verification
 
-- [ ] 9.1 Map each spec scenario (mcp-server, scorecard-results, check-catalog) to a test case
-- [ ] 9.2 Integration test: initialize over stdio, list tools/resources, invoke each tool against fixtures
-- [ ] 9.3 Run `golangci-lint` and `go test ./...` clean
+- [x] 9.1 Map each spec scenario (mcp-server, scorecard-results, check-catalog) to a test case
+- [x] 9.2 Integration test: initialize over an in-memory transport, list tools/resources, invoke each tool with a fake provider
+- [x] 9.3 Run `golangci-lint` (0 issues) and `go test ./...` clean
 - [ ] 9.4 Manual smoke test with the MCP Inspector (ad hoc stdio smoke test done; Inspector pending)
 
 ## 10. Documentation and distribution

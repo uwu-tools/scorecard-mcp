@@ -96,7 +96,7 @@ func (p *CachedRESTProvider) GetResult(ctx context.Context, ref model.RepoRef, c
 	if err != nil {
 		return nil, fmt.Errorf("requesting Scorecard results for %s: %w", ref.String(), err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	switch resp.StatusCode {
 	case http.StatusOK:

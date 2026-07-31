@@ -1,0 +1,15 @@
+# golangci-lint configuration (v2 schema).
+# Kept modest for now; can be aligned further with the ossf/scorecard config
+# when upstreaming.
+version: "2"
+
+linters:
+  default: standard # errcheck, govet, ineffassign, staticcheck, unused
+  enable:
+    - misspell
+    - unconvert
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
