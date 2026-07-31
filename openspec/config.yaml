@@ -1,0 +1,74 @@
+schema: spec-driven
+
+context: |
+  Project: An MCP (Model Context Protocol) server for OpenSSF Scorecard —
+  exposes Scorecard security-posture data to AI agents/clients over MCP.
+
+  Language & stack: Go. MCP via the official github.com/modelcontextprotocol/go-sdk.
+  Imports the Scorecard library directly: github.com/ossf/scorecard/v5/pkg
+  (in-process entrypoint pkg/scorecard.Run). REST client (net/http) for the
+  cached public API at api.scorecard.dev (/projects/{platform}/{org}/{repo}).
+
+  Architecture:
+  - A ResultProvider interface abstracts where results come from, so the data
+    source is swappable without a rewrite:
+      * CachedRESTProvider  — reads pre-computed public results from
+        api.scorecard.dev. Public + opted-in projects only; the weekly scan
+        omits CI-Tests, Contributors, and Dependency-Update-Tool. Ships first.
+      * LocalRunProvider    — runs Scorecard in-process via pkg/scorecard.Run.
+        All checks, any repo the token can access (incl. private), fresh
+        results. Requires GITHUB_AUTH_TOKEN. Specced now, implemented later
+        ("cached now, live later").
+  - Transport: stdio first; structured so Streamable HTTP is a config option
+    later (local dev now, mixed environments later).
+
+  Placement / endgame: incubate in this standalone repo as a Go module that
+  imports pkg; the intended endgame is upstreaming as an in-tree
+  `scorecard mcp` cobra subcommand in github.com/ossf/scorecard (analogous to
+  the existing in-tree `scorecard serve` HTTP interface). Structure code so the
+  MCP lives in a package that drops into cmd/ with an AddCommand wiring; isolate
+  MCP-SDK dependencies under cmd/ to limit the module's dependency surface for
+  downstream library importers. Not a sibling repo. Endorsed by OpenSSF TAC.
+
+  Integration — darnit (github.com/darnitdevorg/darnit, Python OpenSSF Baseline
+  compliance tool): per darnit issue https://github.com/darnitdevorg/darnit/issues/194,
+  darnit consumes Scorecard JSON as a
+  cached "heavy tool" reused across many Baseline controls. The integration
+  boundary is JSON, not language. Therefore tool outputs MUST be deterministic
+  and cache-keyable per repo + commit: include the resolved commit SHA and the
+  scan/generation date in every result.
+
+  Conventions:
+  - OpenSSF project: DCO sign-off (git commit -s) on all commits; Apache-2.0.
+  - Responsible-AI framing: Scorecard results are a guideline/signal, not a
+    verdict; never assert a package "is secure/insecure" — surface the signals
+    and let the user decide. Always state cached-data caveats (opted-in-only;
+    omitted checks) when returning cached results.
+  - Return structured JSON, not stringified maps.
+  - Reference implementation steiza/scorecard-mcp (Python) — inherit its good
+    ideas (REST-over-CLI, platform/owner/repo parsing, responsible framing);
+    improve on it (decomposed tools instead of one monolithic tool, structured
+    output, explicit caveats).
+
+  Development methodology (IMPORTANT for future agent sessions):
+  - Spec-driven via OpenSpec (openspec/ dir): explore -> propose -> design ->
+    specs -> tasks -> implement. Do not restructure without a spec.
+  - Use the MCP dev Agent Skills when designing/implementing this server:
+    build-mcp-server (entry point), build-mcp-app, build-mcpb. Guide:
+    https://modelcontextprotocol.io/docs/2026-07-28/develop/build-with-agent-skills
+    Install with `/plugin install mcp-server-dev`; if the plugin marketplace is
+    blocked (e.g. enterprise policy), clone each skill's SKILL.md + references/
+    from anthropics/claude-plugins-official (plugins/mcp-server-dev/skills/*)
+    into a skills dir (~/.claude/skills/ or .claude/skills/).
+  - AGENTS.md holds the agent-facing summary of these conventions.
+
+# Per-artifact rules (optional)
+rules:
+  proposal:
+    - Always include a "Non-goals" section.
+    - State explicitly that live/in-process scanning (LocalRunProvider) is
+      specced now but deferred to a later change.
+  design:
+    - Document the ResultProvider interface as the central extensibility seam.
+    - Document the determinism/caching contract for darnit (commit SHA + date).
+    - Document the upstreaming path to an in-tree `scorecard mcp` subcommand.

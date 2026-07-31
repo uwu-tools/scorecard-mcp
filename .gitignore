@@ -1,0 +1,14 @@
+# Local Claude Code settings (per-user, not shared)
+.claude/settings.local.json
+
+# Go build output
+/bin/
+/dist/
+*.test
+*.out
+coverage.*
+
+# Editor / OS cruft
+.DS_Store
+*.swp
+*~
