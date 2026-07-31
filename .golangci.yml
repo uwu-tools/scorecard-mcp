@@ -1,15 +1,153 @@
 # golangci-lint configuration (v2 schema).
-# Kept modest for now; can be aligned further with the ossf/scorecard config
-# when upstreaming.
+# Adapted from ossf/allstar's .golangci.yml
+# (https://github.com/ossf/allstar/blob/main/.golangci.yml) for scorecard-mcp.
 version: "2"
-
+run:
+  concurrency: 6
 linters:
-  default: standard # errcheck, govet, ineffassign, staticcheck, unused
   enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - copyloopvar
+    - dogsled
+    - durationcheck
+    # TODO(lint): re-enable
+    #- err113
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - forbidigo
+    - gocheckcompilerdirectives
+    # TODO(lint): re-enable
+    #- gochecknoinits
+    - gochecksumtype
+    # TODO(lint): re-enable
+    #- gocognit
+    - goconst
+    # TODO(lint): re-enable
+    #- gocritic
+    # TODO(lint): re-enable
+    #- gocyclo
+    - godot
+    - godox
+    - goheader
+    # manage use of replace, retract and exclude directives
+    # https://golangci-lint.run/usage/linters/#gomoddirectives
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    # TODO(lint): re-enable
+    #- lll
+    - loggercheck
+    - makezero
+    - mirror
     - misspell
+    - musttag
+    - nakedret
+    # TODO(lint): re-enable
+    #- nestif
+    - nilerr
+    - nilnesserr
+    - noctx
+    - nolintlint
+    # TODO(lint): re-enable
+    #- paralleltest
+    - predeclared
+    - protogetter
+    - reassign
+    - recvcheck
+    - rowserrcheck
+    - spancheck
+    - sqlclosecheck
+    - staticcheck
+    - testableexamples
+    - testifylint
+    - thelper
+    - tparallel
     - unconvert
-
+    - usestdlibvars
+    - usetesting
+    - whitespace
+    # TODO(lint): re-enable
+    #- wrapcheck
+    - zerologlint
+  disable:
+    - exhaustruct # initializing every struct makes tests longer without much benefit
+    - testpackage # tests don't need their own package
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    exhaustive:
+      # https://golangci-lint.run/usage/linters/#exhaustive
+      default-signifies-exhaustive: true
+    forbidigo:
+      forbid:
+        - pattern: ^fmt\.Print.*$
+          msg: Do not commit print statements. Output to stdout is the MCP stdio transport channel and must not be corrupted.
+    godox:
+      keywords:
+        - BUG
+        - FIXME
+        - HACK
+    gosec:
+      excludes:
+        # TODO: investigate and fix separately
+        - G115 # integer overflow conversion
+    nolintlint:
+      # `//nolint` should mention specific linter such as `//nolint:my-linter`
+      # Overly broad directives can hide unrelated issues
+      require-specific: true
+  exclusions:
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: '(.+)_test\.go'
+        linters:
+          - dogsled
+          - err113
+          - errcheck
+          - funlen
+          - goconst
+          - gocyclo
+          - lll
+          - wrapcheck
+issues:
+  # Maximum issues count per one linter. Set to 0 to disable.
+  max-issues-per-linter: 0
+  # Maximum count of issues with the same text. Set to 0 to disable.
+  max-same-issues: 0
+  new-from-rev: ""
 formatters:
   enable:
+    - gci
     - gofmt
+    - gofumpt
     - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/ossf/scorecard)
+        - prefix(github.com/uwu-tools/scorecard-mcp)
+  exclusions:
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+    generated: lax
