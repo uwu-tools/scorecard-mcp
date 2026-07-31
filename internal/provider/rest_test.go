@@ -23,6 +23,7 @@ const sampleResult = `{
 }`
 
 func TestCachedRESTProviderGetResult(t *testing.T) {
+	t.Parallel()
 	const commit = "64febf8c5229f0a5f0a6d2a0f0d4b6a7c8d9e0f1"
 	var gotPath, gotQuery string
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -72,6 +73,7 @@ func TestCachedRESTProviderGetResult(t *testing.T) {
 }
 
 func TestCachedRESTProviderNotFound(t *testing.T) {
+	t.Parallel()
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 	}))
@@ -86,6 +88,7 @@ func TestCachedRESTProviderNotFound(t *testing.T) {
 }
 
 func TestCachedRESTProviderBadRequest(t *testing.T) {
+	t.Parallel()
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}))

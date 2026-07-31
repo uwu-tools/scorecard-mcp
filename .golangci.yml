@@ -14,24 +14,19 @@ linters:
     - copyloopvar
     - dogsled
     - durationcheck
-    # TODO(lint): re-enable
-    #- err113
+    - err113
     - errchkjson
     - errname
     - errorlint
     - exhaustive
     - forbidigo
     - gocheckcompilerdirectives
-    # TODO(lint): re-enable
-    #- gochecknoinits
+    - gochecknoinits
     - gochecksumtype
-    # TODO(lint): re-enable
-    #- gocognit
+    - gocognit
     - goconst
-    # TODO(lint): re-enable
-    #- gocritic
-    # TODO(lint): re-enable
-    #- gocyclo
+    - gocritic
+    - gocyclo
     - godot
     - godox
     - goheader
@@ -42,22 +37,19 @@ linters:
     - goprintffuncname
     - gosec
     - gosmopolitan
-    # TODO(lint): re-enable
-    #- lll
+    - lll
     - loggercheck
     - makezero
     - mirror
     - misspell
     - musttag
     - nakedret
-    # TODO(lint): re-enable
-    #- nestif
+    - nestif
     - nilerr
     - nilnesserr
     - noctx
     - nolintlint
-    # TODO(lint): re-enable
-    #- paralleltest
+    - paralleltest
     - predeclared
     - protogetter
     - reassign
@@ -74,8 +66,7 @@ linters:
     - usestdlibvars
     - usetesting
     - whitespace
-    # TODO(lint): re-enable
-    #- wrapcheck
+    - wrapcheck
     - zerologlint
   disable:
     - exhaustruct # initializing every struct makes tests longer without much benefit
@@ -91,19 +82,83 @@ linters:
       forbid:
         - pattern: ^fmt\.Print.*$
           msg: Do not commit print statements. Output to stdout is the MCP stdio transport channel and must not be corrupted.
+    gocritic:
+      disable-all: true
+      enabled-checks:
+        - appendAssign
+        - argOrder
+        - badCall
+        - badCond
+        - caseOrder
+        - codegenComment
+        - commentedOutCode
+        - deprecatedComment
+        - dupArg
+        - dupBranchBody
+        - dupCase
+        - dupSubExpr
+        - exitAfterDefer
+        - flagDeref
+        - flagName
+        - mapKey
+        - nilValReturn
+        - octalLiteral
+        - offBy1
+        - sloppyLen
+        - sloppyTypeAssert
+        - weakCond
+        - appendCombine
+        - hugeParam
+        - rangeExprCopy
+        - rangeValCopy
+        - assignOp
+        - boolExprSimplify
+        - captLocal
+        - commentedOutImport
+        - commentFormatting
+        - defaultCaseOrder
+        - docStub
+        - elseif
+        - emptyFallthrough
+        - hexLiteral
+        - ifElseChain
+        - methodExprCall
+        - newDeref
+        - regexpMust
+        - singleCaseSwitch
+        - switchTrue
+        - typeAssertChain
+        - typeSwitchVar
+        - underef
+        - unlabelStmt
+        - unlambda
+        - unslice
+        - valSwap
+        - wrapperFunc
+        - builtinShadow
+        - importShadow
+        - initClause
+        - nestingReduce
+        - paramTypeCombine
+        - ptrToRefParam
+        - typeUnparen
+        - unnecessaryBlock
     godox:
       keywords:
         - BUG
         - FIXME
         - HACK
-    gosec:
-      excludes:
-        # TODO: investigate and fix separately
-        - G115 # integer overflow conversion
     nolintlint:
       # `//nolint` should mention specific linter such as `//nolint:my-linter`
       # Overly broad directives can hide unrelated issues
       require-specific: true
+    wrapcheck:
+      # Only require wrapping errors that cross the module boundary; errors from
+      # our own internal packages already carry actionable context.
+      ignore-package-globs:
+        - github.com/uwu-tools/scorecard-mcp/**
+      ignore-interface-regexps:
+        - \.Provider$
   exclusions:
     paths:
       - third_party$
@@ -118,7 +173,6 @@ linters:
     rules:
       - path: '(.+)_test\.go'
         linters:
-          - dogsled
           - err113
           - errcheck
           - funlen

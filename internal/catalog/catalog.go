@@ -4,6 +4,7 @@
 package catalog
 
 import (
+	"errors"
 	"fmt"
 	"runtime/debug"
 	"sort"
@@ -11,6 +12,9 @@ import (
 
 	scdocs "github.com/ossf/scorecard/v5/docs/checks"
 )
+
+// errUnknownCheck is returned when a check name is not recognized.
+var errUnknownCheck = errors.New("unknown check")
 
 // experimentalChecks lists checks excluded from Scorecard's default set unless
 // SCORECARD_EXPERIMENTAL is set. Source of truth: ossf/scorecard
@@ -29,7 +33,7 @@ type CheckInfo struct {
 	Tags               []string `json:"tags,omitempty"`
 	SupportedPlatforms []string `json:"supported_platforms,omitempty"`
 	DocumentationURL   string   `json:"documentation_url,omitempty"`
-	Experimental       bool     `json:"experimental" jsonschema:"true if the check is experimental (off by default in Scorecard)"`
+	Experimental       bool     `json:"experimental" jsonschema:"experimental (off by default in Scorecard)"`
 }
 
 // CheckDetail is the full documentation for a check (used by explain_check and
@@ -87,11 +91,11 @@ func (c *Catalog) List() []CheckInfo {
 func (c *Catalog) Explain(name string) (CheckDetail, error) {
 	canonical, ok := c.resolve(name)
 	if !ok {
-		return CheckDetail{}, fmt.Errorf("unknown check %q; use list_checks to see valid check names", name)
+		return CheckDetail{}, fmt.Errorf("%w %q; use list_checks to see valid check names", errUnknownCheck, name)
 	}
 	cd, err := c.doc.GetCheck(canonical)
 	if err != nil {
-		return CheckDetail{}, fmt.Errorf("unknown check %q; use list_checks to see valid check names", name)
+		return CheckDetail{}, fmt.Errorf("%w %q; use list_checks to see valid check names", errUnknownCheck, name)
 	}
 	info := c.toInfo(cd)
 	return CheckDetail{

@@ -77,6 +77,7 @@ func decodeStructured[T any](t *testing.T, res *mcp.CallToolResult) T {
 }
 
 func TestListToolsAnnotations(t *testing.T) {
+	t.Parallel()
 	cs, done := newTestSession(t, &fakeProvider{result: fakeResult()})
 	defer done()
 
@@ -102,6 +103,7 @@ func TestListToolsAnnotations(t *testing.T) {
 }
 
 func TestGetRepoScoreTool(t *testing.T) {
+	t.Parallel()
 	cs, done := newTestSession(t, &fakeProvider{result: fakeResult()})
 	defer done()
 
@@ -134,6 +136,7 @@ func TestGetRepoScoreTool(t *testing.T) {
 }
 
 func TestGetRepoScoreInvalidCommit(t *testing.T) {
+	t.Parallel()
 	cs, done := newTestSession(t, &fakeProvider{result: fakeResult()})
 	defer done()
 
@@ -150,6 +153,7 @@ func TestGetRepoScoreInvalidCommit(t *testing.T) {
 }
 
 func TestGetCheckResultUnknown(t *testing.T) {
+	t.Parallel()
 	cs, done := newTestSession(t, &fakeProvider{result: fakeResult()})
 	defer done()
 
@@ -166,6 +170,7 @@ func TestGetCheckResultUnknown(t *testing.T) {
 }
 
 func TestCompareReposInlineError(t *testing.T) {
+	t.Parallel()
 	cs, done := newTestSession(t, &fakeProvider{result: fakeResult()})
 	defer done()
 
@@ -192,6 +197,7 @@ func TestCompareReposInlineError(t *testing.T) {
 }
 
 func TestListChecksTool(t *testing.T) {
+	t.Parallel()
 	cs, done := newTestSession(t, &fakeProvider{result: fakeResult()})
 	defer done()
 
@@ -209,6 +215,7 @@ func TestListChecksTool(t *testing.T) {
 }
 
 func TestReadCheckResource(t *testing.T) {
+	t.Parallel()
 	cs, done := newTestSession(t, &fakeProvider{result: fakeResult()})
 	defer done()
 

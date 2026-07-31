@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -17,16 +18,23 @@ import (
 )
 
 func main() {
+	if err := run(); err != nil {
+		log.Fatalf("scorecard-mcp: %v", err)
+	}
+}
+
+func run() error {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
 	p := provider.NewCachedREST("")
 	s, err := server.New(p)
 	if err != nil {
-		log.Fatalf("scorecard-mcp: %v", err)
+		return err
 	}
 
 	if err := s.Run(ctx, &mcp.StdioTransport{}); err != nil && !errors.Is(err, context.Canceled) {
-		log.Fatalf("scorecard-mcp: %v", err)
+		return fmt.Errorf("running server: %w", err)
 	}
+	return nil
 }

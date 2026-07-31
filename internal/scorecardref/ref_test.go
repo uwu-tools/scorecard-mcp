@@ -3,6 +3,7 @@ package scorecardref
 import "testing"
 
 func TestParse(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		in       string
 		platform string
@@ -41,6 +42,7 @@ func TestParse(t *testing.T) {
 }
 
 func TestValidateCommit(t *testing.T) {
+	t.Parallel()
 	valid := "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0"
 	if err := ValidateCommit(valid); err != nil {
 		t.Errorf("ValidateCommit(valid) unexpected error: %v", err)

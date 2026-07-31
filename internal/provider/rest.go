@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -13,6 +14,12 @@ import (
 
 // DefaultRESTBaseURL is the public cached OpenSSF Scorecard REST API.
 const DefaultRESTBaseURL = "https://api.scorecard.dev"
+
+// Sentinel errors returned for non-200 responses.
+var (
+	errBadRequest       = errors.New("invalid Scorecard REST API request")
+	errUnexpectedStatus = errors.New("unexpected Scorecard REST API status")
+)
 
 var cachedCaveats = []string{
 	"Cached results cover only projects that have opted in via publish_results: true.",
@@ -104,9 +111,9 @@ func (p *CachedRESTProvider) GetResult(ctx context.Context, ref model.RepoRef, c
 	case http.StatusNotFound:
 		return nil, &NotFoundError{Ref: ref}
 	case http.StatusBadRequest:
-		return nil, fmt.Errorf("invalid request for %s (bad request); check the repository reference and commit", ref.String())
+		return nil, fmt.Errorf("%w for %s (HTTP 400); check the repository reference and commit", errBadRequest, ref.String())
 	default:
-		return nil, fmt.Errorf("the Scorecard REST API returned status %d for %s", resp.StatusCode, ref.String())
+		return nil, fmt.Errorf("%w %d for %s", errUnexpectedStatus, resp.StatusCode, ref.String())
 	}
 
 	var rr restResult

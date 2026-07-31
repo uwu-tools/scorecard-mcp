@@ -2,6 +2,8 @@
 package server
 
 import (
+	"errors"
+
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/uwu-tools/scorecard-mcp/internal/catalog"
@@ -11,14 +13,25 @@ import (
 // Version is the server version, overridable at build time via -ldflags.
 var Version = "dev"
 
+// Sentinel errors returned by tool handlers.
+var (
+	errCheckRequired = errors.New("check is required; use list_checks to discover valid check names")
+	errCheckNotFound = errors.New("check not found in results")
+	errReposRequired = errors.New("repos is required; provide one or more repository references")
+)
+
 // instructions is placed in the client's system prompt. It carries the
 // cross-cutting responsible-AI framing so it need not (and must not) appear as
 // behavioral text in individual tool descriptions.
-const instructions = `This server surfaces OpenSSF Scorecard security-posture signals for open source repositories.
-
-Treat results as heuristic signals to inform a human decision, not as a verdict. Never state that a repository "is secure" or "is insecure"; report the signals and their caveats instead. Aggregate scores say nothing about which individual behaviors a repository does or does not follow, and Scorecard is not a guarantee of security or of regulatory compliance.
-
-Results from the cached provider cover only projects that opted in via publish_results, and the weekly public scan omits the CI-Tests, Contributors, and Dependency-Update-Tool checks. A check or aggregate score of -1 means inconclusive, not a failing score.`
+const instructions = "This server surfaces OpenSSF Scorecard security-posture signals for open source " +
+	"repositories.\n\n" +
+	"Treat results as heuristic signals to inform a human decision, not as a verdict. Never state " +
+	"that a repository \"is secure\" or \"is insecure\"; report the signals and their caveats instead. " +
+	"Aggregate scores say nothing about which individual behaviors a repository does or does not " +
+	"follow, and Scorecard is not a guarantee of security or of regulatory compliance.\n\n" +
+	"Results from the cached provider cover only projects that opted in via publish_results, and the " +
+	"weekly public scan omits the CI-Tests, Contributors, and Dependency-Update-Tool checks. A check " +
+	"or aggregate score of -1 means inconclusive, not a failing score."
 
 // New builds the MCP server with all tools and resources registered. It is
 // transport-agnostic: the caller connects the returned server to a transport

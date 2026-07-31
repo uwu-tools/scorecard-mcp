@@ -3,6 +3,7 @@ package catalog
 import "testing"
 
 func TestCatalogList(t *testing.T) {
+	t.Parallel()
 	c, err := New()
 	if err != nil {
 		t.Fatalf("New: %v", err)
@@ -22,6 +23,7 @@ func TestCatalogList(t *testing.T) {
 }
 
 func TestCatalogExplain(t *testing.T) {
+	t.Parallel()
 	c, err := New()
 	if err != nil {
 		t.Fatalf("New: %v", err)

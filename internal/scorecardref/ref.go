@@ -3,6 +3,7 @@
 package scorecardref
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -16,7 +17,12 @@ const (
 	PlatformGitLab = "gitlab.com"
 )
 
+// Sentinel errors returned by this package.
 var (
+	errInvalidRef          = errors.New("invalid repository reference")
+	errUnsupportedPlatform = errors.New("unsupported platform")
+	errInvalidCommit       = errors.New("invalid commit")
+
 	supportedPlatforms = map[string]bool{PlatformGitHub: true, PlatformGitLab: true}
 	commitSHA          = regexp.MustCompile(`^[0-9a-fA-F]{40}$`)
 )
@@ -32,7 +38,7 @@ func Parse(s string) (model.RepoRef, error) {
 	s = strings.TrimPrefix(s, "http://")
 	s = strings.Trim(s, "/")
 	if s == "" {
-		return model.RepoRef{}, fmt.Errorf("empty repository reference; expected platform/owner/repo")
+		return model.RepoRef{}, fmt.Errorf("%w: expected platform/owner/repo", errInvalidRef)
 	}
 
 	parts := strings.Split(s, "/")
@@ -44,18 +50,17 @@ func Parse(s string) (model.RepoRef, error) {
 		ref = model.RepoRef{Platform: strings.ToLower(parts[0]), Org: parts[1], Name: parts[2]}
 	default:
 		return model.RepoRef{}, fmt.Errorf(
-			"invalid repository reference %q; expected platform/owner/repo (platform optional, defaults to %s)",
-			orig, PlatformGitHub)
+			"%w %q: expected platform/owner/repo (platform optional, defaults to %s)",
+			errInvalidRef, orig, PlatformGitHub)
 	}
 
 	if ref.Org == "" || ref.Name == "" {
-		return model.RepoRef{}, fmt.Errorf(
-			"invalid repository reference %q; owner and repository must be non-empty", orig)
+		return model.RepoRef{}, fmt.Errorf("%w %q: owner and repository must be non-empty", errInvalidRef, orig)
 	}
 	if !supportedPlatforms[ref.Platform] {
 		return model.RepoRef{}, fmt.Errorf(
-			"unsupported platform %q; supported platforms are %s and %s",
-			ref.Platform, PlatformGitHub, PlatformGitLab)
+			"%w %q: supported platforms are %s and %s",
+			errUnsupportedPlatform, ref.Platform, PlatformGitHub, PlatformGitLab)
 	}
 	return ref, nil
 }
@@ -67,7 +72,7 @@ func ValidateCommit(commit string) error {
 		return nil
 	}
 	if !commitSHA.MatchString(commit) {
-		return fmt.Errorf("invalid commit %q; expected a 40-character hexadecimal SHA", commit)
+		return fmt.Errorf("%w %q: expected a 40-character hexadecimal SHA", errInvalidCommit, commit)
 	}
 	return nil
 }

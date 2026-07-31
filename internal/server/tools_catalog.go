@@ -23,14 +23,14 @@ const (
 type listChecksInput struct{}
 
 type listChecksOutput struct {
-	ScorecardVersion string              `json:"scorecard_version,omitempty" jsonschema:"the scorecard module version this catalog was built from"`
+	ScorecardVersion string              `json:"scorecard_version,omitempty"`
 	Checks           []catalog.CheckInfo `json:"checks"`
 }
 
 // --- explain_check ---
 
 type explainCheckInput struct {
-	Check string `json:"check" jsonschema:"the Scorecard check name, e.g. Branch-Protection (case-insensitive)"`
+	Check string `json:"check" jsonschema:"check name, e.g. Branch-Protection (case-insensitive)"`
 }
 
 type explainCheckOutput struct {
@@ -48,7 +48,11 @@ func registerCatalogTools(s *mcp.Server, c *catalog.Catalog) {
 			"contact the network. Use explain_check for a single check's full methodology and " +
 			"remediation.",
 		Annotations: readOnlyAnnotations("List Scorecard checks", false),
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, _ listChecksInput) (*mcp.CallToolResult, listChecksOutput, error) {
+	}, func(
+		_ context.Context,
+		_ *mcp.CallToolRequest,
+		_ listChecksInput,
+	) (*mcp.CallToolResult, listChecksOutput, error) {
 		return nil, listChecksOutput{ScorecardVersion: c.ScorecardVersion(), Checks: c.List()}, nil
 	})
 
@@ -59,9 +63,13 @@ func registerCatalogTools(s *mcp.Server, c *catalog.Catalog) {
 			"names. Sourced offline from the Scorecard check documentation; does not contact the " +
 			"network. Use get_check_result to get a check's score for a specific repository.",
 		Annotations: readOnlyAnnotations("Explain a Scorecard check", false),
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, in explainCheckInput) (*mcp.CallToolResult, explainCheckOutput, error) {
+	}, func(
+		_ context.Context,
+		_ *mcp.CallToolRequest,
+		in explainCheckInput,
+	) (*mcp.CallToolResult, explainCheckOutput, error) {
 		if in.Check == "" {
-			return nil, explainCheckOutput{}, fmt.Errorf("check is required; use list_checks to discover valid check names")
+			return nil, explainCheckOutput{}, errCheckRequired
 		}
 		detail, err := c.Explain(in.Check)
 		if err != nil {
@@ -80,7 +88,7 @@ func registerCatalogResources(s *mcp.Server, c *catalog.Catalog) {
 		Title:       "OpenSSF Scorecard checks",
 		Description: "Index of all OpenSSF Scorecard checks with summary documentation.",
 		MIMEType:    "application/json",
-	}, func(ctx context.Context, req *mcp.ReadResourceRequest) (*mcp.ReadResourceResult, error) {
+	}, func(_ context.Context, req *mcp.ReadResourceRequest) (*mcp.ReadResourceResult, error) {
 		payload := listChecksOutput{ScorecardVersion: c.ScorecardVersion(), Checks: c.List()}
 		return jsonResource(req.Params.URI, payload)
 	})
@@ -91,7 +99,7 @@ func registerCatalogResources(s *mcp.Server, c *catalog.Catalog) {
 		Title:       "OpenSSF Scorecard check",
 		Description: "Full documentation for a single OpenSSF Scorecard check, addressed by name.",
 		MIMEType:    "application/json",
-	}, func(ctx context.Context, req *mcp.ReadResourceRequest) (*mcp.ReadResourceResult, error) {
+	}, func(_ context.Context, req *mcp.ReadResourceRequest) (*mcp.ReadResourceResult, error) {
 		uri := req.Params.URI
 		name := strings.TrimPrefix(uri, checkResourcePrefix)
 		if name == uri || name == "" {
