@@ -72,6 +72,30 @@ func TestCachedRESTProviderGetResult(t *testing.T) {
 	}
 }
 
+func TestCachedRESTProviderTrimsTrailingSlash(t *testing.T) {
+	t.Parallel()
+	var gotPath string
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotPath = r.URL.Path
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(sampleResult))
+	}))
+	defer ts.Close()
+
+	p := NewCachedREST(ts.URL + "/")
+	if p.BaseURL != ts.URL {
+		t.Errorf("BaseURL = %q, want %q", p.BaseURL, ts.URL)
+	}
+
+	ref := model.RepoRef{Platform: "github.com", Org: "ossf", Name: "scorecard"}
+	if _, err := p.GetResult(context.Background(), ref, ""); err != nil {
+		t.Fatalf("GetResult: %v", err)
+	}
+	if gotPath != "/projects/github.com/ossf/scorecard" {
+		t.Errorf("path = %q, want no doubled slash", gotPath)
+	}
+}
+
 func TestCachedRESTProviderNotFound(t *testing.T) {
 	t.Parallel()
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {

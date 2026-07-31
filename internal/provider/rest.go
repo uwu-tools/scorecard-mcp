@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/uwu-tools/scorecard-mcp/internal/model"
@@ -43,7 +44,7 @@ func NewCachedREST(baseURL string) *CachedRESTProvider {
 		baseURL = DefaultRESTBaseURL
 	}
 	return &CachedRESTProvider{
-		BaseURL: baseURL,
+		BaseURL: strings.TrimSuffix(baseURL, "/"),
 		Client:  &http.Client{Timeout: 30 * time.Second},
 	}
 }
