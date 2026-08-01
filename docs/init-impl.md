@@ -73,10 +73,11 @@ value immediately while keeping the larger capability a non-rewrite addition.
 
 The [`darnit`](https://github.com/darnitdevorg/darnit) OpenSSF Baseline tool
 (issue [#194](https://github.com/darnitdevorg/darnit/issues/194)) consumes
-Scorecard output as a cached "heavy tool" reused across many controls. The integration boundary is **JSON, not language**. Accordingly,
-every result carries provenance (resolved commit SHA, scan date, Scorecard
-version, `source`) so downstream consumers can cache and reproduce it, and the
-output mirrors Scorecard's canonical JSON so a consumer's adapter is drop-in.
+Scorecard output as a cached "heavy tool" reused across many controls. The
+integration boundary is **JSON, not language**. Accordingly, every result
+carries provenance (resolved commit SHA, scan date, Scorecard version,
+`source`) so downstream consumers can cache and reproduce it, and the output
+mirrors Scorecard's canonical JSON so a consumer's adapter is drop-in.
 
 ## Phase 1 — Discovery
 
