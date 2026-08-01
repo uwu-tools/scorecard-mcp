@@ -170,3 +170,65 @@ Directory submission is a goal, rather than discovering the mismatch later.
 4. **F3–F7** and the informational items — polish, folded into the release and
    hygiene work.
 5. **D1** — make the Directory-submission call explicitly.
+
+*(Superseded by [Resolutions](#resolutions) below, which reflects the order and
+decisions actually agreed on.)*
+
+## Resolutions
+
+**Date:** 2026-08-01. Every finding and the D1 decision were discussed and
+resolved one at a time, in the order below — revised from "Recommended order"
+above after closer review of the code behind each finding. This section is
+authoritative going forward.
+
+1. **D1 — resolved.** stdio + in-tree `scorecard mcp` subcommand is the
+   approach for the foreseeable future. Anthropic Directory submission is
+   explicitly *not* a current goal (Directory expects remote HTTP or an MCPB
+   bundle, not bare stdio) but is not permanently ruled out.
+2. **F1 — resolved.** `get_check_result` will return four distinct outcomes
+   instead of one generic "not found": (1) unknown check name, (2) known but
+   experimental, (3) known but omitted from this provider's scan (e.g.
+   `CachedRESTProvider.Capabilities().OmittedChecks`), (4) present. Requires
+   wiring `*catalog.Catalog` into the handler alongside `provider.Provider`.
+3. **F4 — resolved, promoted ahead of F2/F3** since it is load-bearing for
+   F1's case (2). Replace the hand-maintained `experimentalChecks` map with a
+   computed diff of `checks.GetAll()` vs. `checks.GetAllWithExperimental()`
+   (scorecard v5.5.0 `checks/all_checks.go`), evaluated once in
+   `catalog.New()`. Accepts a new import of
+   `github.com/ossf/scorecard/v5/checks` (same module/version already
+   depended on via `docs/checks`).
+4. **F2 + F3 — merged into one unit; explicit design review required before
+   implementation.** F3's `CommandTransport` stdio integration test will be
+   written against F2's new `-base-url`/`SCORECARD_MCP_BASE_URL` flag
+   (pointed at an `httptest.Server`) rather than live `api.scorecard.dev`.
+   Open questions for that review: `go build`-per-test vs. a `TestMain` that
+   builds once; test location (`cmd/scorecard-mcp/` vs. a tagged
+   `internal/server/integration_test.go`).
+5. **F7 — resolved.** Rejected a `details:false` input (it fights the tool's
+   purpose). Instead: a new `max_details` input (default 50, clamped 1–500),
+   and a new `checkDetail` output type (not the shared `model.Check`)
+   carrying `details_total`/`details_truncated` alongside a capped
+   `details[]`. Truncation is applied only in the `get_check_result` handler,
+   not the provider — `Provider.GetResult` keeps returning the fullest result
+   it can, which scopes the truncation knob to the one tool that needs it and
+   preserves darnit's full-JSON contract. Verified against live data before
+   picking 50: `Pinned-Dependencies` details ranged 5–186 across sampled repos
+   (`ossf/scorecard`, `kubernetes/kubernetes`, `tensorflow/tensorflow`), and
+   `Token-Permissions` hit 377 on `envoyproxy/envoy` — confirming truncation
+   must be generic across any check, not specific to one.
+6. **F5 — resolved.** Add `jsonschema` `pattern` (commit, 40-hex) and
+   `maxItems` (`compare_repos` `repos`, 10) as client-side, fail-fast hints
+   only. All existing handler-side validation (`scorecardref.ValidateCommit`,
+   the `maxCompareRepos` truncation path) stays as the authoritative
+   enforcement, since MCP schemas are advisory and not every client validates
+   before calling.
+7. **F6 — resolved.** Bounded concurrent fetch in `compare_repos` via
+   `golang.org/x/sync/errgroup` with `SetLimit(5)`, preserving input order in
+   `results[]`.
+8. **Live provider (`LocalRunProvider`) — explicitly deferred** to its own
+   follow-up design conversation (auth-token delivery, sync-vs-async
+   invocation with progress/cancellation, tool-surface impact).
+9. **Informational items — backlogged as-is:** `Version` via `-ldflags` at
+   release time; a `/scorecard-summary` prompt only if a usage pattern
+   emerges; `goheader` fixed opportunistically next time `.golangci.yml` is
+   touched.
