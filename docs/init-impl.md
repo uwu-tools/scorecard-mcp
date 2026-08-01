@@ -72,8 +72,8 @@ value immediately while keeping the larger capability a non-rewrite addition.
 ### Integration: darnit
 
 The [`darnit`](https://github.com/darnitdevorg/darnit) OpenSSF Baseline tool
-(issue #194) consumes Scorecard output as a cached "heavy tool" reused across
-many controls. The integration boundary is **JSON, not language**. Accordingly,
+(issue [#194](https://github.com/darnitdevorg/darnit/issues/194)) consumes
+Scorecard output as a cached "heavy tool" reused across many controls. The integration boundary is **JSON, not language**. Accordingly,
 every result carries provenance (resolved commit SHA, scan date, Scorecard
 version, `source`) so downstream consumers can cache and reproduce it, and the
 output mirrors Scorecard's canonical JSON so a consumer's adapter is drop-in.
@@ -96,7 +96,8 @@ investigation of the upstream projects:
   maintainer annotations); a score of `-1` means *inconclusive*, not failing;
   authentication for live scans is handled by the library's roundtripper; the
   REST data is licensed CDLA Permissive 2.0.
-- **darnit #194:** confirmed the JSON-boundary contract described above.
+- **darnit [#194](https://github.com/darnitdevorg/darnit/issues/194):** confirmed
+  the JSON-boundary contract described above.
 
 ## Phase 2 — Specification (OpenSpec)
 
