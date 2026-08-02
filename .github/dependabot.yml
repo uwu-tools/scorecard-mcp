@@ -5,6 +5,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     groups:
       go-dependencies:
         patterns:
@@ -24,3 +26,5 @@ updates:
           - "github/*"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7

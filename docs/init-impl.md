@@ -1,7 +1,7 @@
 # Initial Implementation and Scaffolding — Process Record
 
 This document records how `scorecard-mcp` was designed, built, and scaffolded,
-and — more importantly — *why* each decision was made. It is a narrative
+and — more importantly — _why_ each decision was made. It is a narrative
 companion to the specifications under `openspec/` and the review in
 [`mcp-design-audit.md`](mcp-design-audit.md), written so future contributors can
 reconstruct the reasoning rather than reverse-engineer it from the diff.
@@ -94,7 +94,7 @@ investigation of the upstream projects:
   `pkg/scorecard.Run` is importable out-of-tree; the check catalog is available
   offline via the public `docs/checks` package; the cached REST result is a
   subset of the CLI result (score + checks + metadata; no probe findings or
-  maintainer annotations); a score of `-1` means *inconclusive*, not failing;
+  maintainer annotations); a score of `-1` means _inconclusive_, not failing;
   authentication for live scans is handled by the library's roundtripper; the
   REST data is licensed CDLA Permissive 2.0.
 - **darnit [#194](https://github.com/darnitdevorg/darnit/issues/194):** confirmed
@@ -132,12 +132,12 @@ Implementation proceeded in verified increments:
    validation), `internal/provider` (the `ResultProvider` seam and
    `CachedRESTProvider`), `internal/server` (the factory), the three
    `scorecard-results` tools, and the `cmd/scorecard-mcp` stdio entrypoint.
-   Verified end to end over stdio against the live API.
+   Verified end-to-end over stdio against the live API.
 2. **Check catalog** — `internal/catalog` (offline via `docs/checks`), the
    `list_checks` and `explain_check` tools, and the `scorecard://checks` and
    `scorecard://checks/{name}` resources.
 3. **Tests** — provider unit tests (via `httptest`) and in-memory MCP
-   integration tests exercising the tools and resources end to end.
+   integration tests exercising the tools and resources end-to-end.
 
 The resulting surface is five read-only tools (`get_repo_score`,
 `get_check_result`, `compare_repos`, `list_checks`, `explain_check`) plus two

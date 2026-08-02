@@ -2,7 +2,7 @@
 
 This document records how `scorecard-mcp` was assessed against the
 [OpenSSF Baseline](https://baseline.openssf.org) (OSPS Baseline), what the
-assessment found, and — as importantly — *why* the remaining gaps are handled the
+assessment found, and — as importantly — _why_ the remaining gaps are handled the
 way they are. It is a companion to [`init-impl.md`](init-impl.md) (how the server
 was built) and [`mcp-design-audit.md`](mcp-design-audit.md) (the MCP/Directory
 review), written so a future contributor — including whoever prepares the
@@ -36,22 +36,22 @@ The assessment followed `darnit`'s intended flow:
    bulk-applying generated files.
 
 Repository settings were inspected read-only via the GitHub API to determine
-what is actually achievable (see [Blocked](#whats-blocked-repository-settings)).
+what is actually achievable (see [Blocked](#whats-blocked-repository-settings-5)).
 
 ## Confirmed project context
 
 Recorded in [`.project/darnit.yaml`](../.project/darnit.yaml):
 
-| Key                   | Value            | Notes                                       |
-| --------------------- | ---------------- | ------------------------------------------- |
-| `governance_model`    | `meritocracy`    | Judgment call — see below                   |
-| `has_subprojects`     | `false`          | Standalone single repo                      |
-| `is_library`          | `false`          | Judgment call — see below                   |
-| `has_releases`        | `true`           | Releases planned during incubation          |
-| `has_compiled_assets` | `true`           | Ships a Go binary                           |
-| `ci_provider`         | `github`         | GitHub Actions                              |
-| `primary_language`    | `go`             |                                             |
-| `security_contact`    | `See SECURITY.md`|                                             |
+| Key                   | Value             | Notes                              |
+| --------------------- | ----------------- | ---------------------------------- |
+| `governance_model`    | `meritocracy`     | Judgment call — see below          |
+| `has_subprojects`     | `false`           | Standalone single repo             |
+| `is_library`          | `false`           | Judgment call — see below          |
+| `has_releases`        | `true`            | Releases planned during incubation |
+| `has_compiled_assets` | `true`            | Ships a Go binary                  |
+| `ci_provider`         | `github`          | GitHub Actions                     |
+| `primary_language`    | `go`              |                                    |
+| `security_contact`    | `See SECURITY.md` |                                    |
 
 Two values were judgment calls worth recording:
 
@@ -66,7 +66,7 @@ Two values were judgment calls worth recording:
   `package main` is `cmd/scorecard-mcp` (it builds the MCP server binary), all
   logic lives under `internal/` (which Go forbids other modules from importing),
   and the endgame is a cobra subcommand — a command, not an importable API. It
-  *consumes* the Scorecard library; it is not consumed as one.
+  _consumes_ the Scorecard library; it is not consumed as one.
 
 Beyond the audit context, the `.project/` metadata fields were completed this
 session: `description` and `repositories` in
@@ -81,13 +81,13 @@ and are intentionally left blank.
 
 Level 3 audit, with context applied:
 
-| Status                    | Count |
-| ------------------------- | ----: |
-| ✅ Pass                    |    42 |
-| ❌ Fail                    |    16 |
+| Status                       | Count |
+| ---------------------------- | ----: |
+| ✅ Pass                      |    42 |
+| ❌ Fail                      |    16 |
 | ⚠️ Needs manual verification |     5 |
-| ➖ Not applicable          |     2 |
-| **Total**                 |    65 |
+| ➖ Not applicable            |     2 |
+| **Total**                    |    65 |
 
 Level compliance (all currently non-compliant):
 
@@ -97,7 +97,7 @@ Level compliance (all currently non-compliant):
 | L2    |      4 |          1 |
 | L3    |     10 |          2 |
 
-The foundational hygiene that *travels with the code* is already in place; the
+The foundational hygiene that _travels with the code_ is already in place; the
 gaps are concentrated in repository settings (blocked by plan/visibility) and in
 documentation that would be redundant post-upstream.
 
@@ -128,13 +128,13 @@ Satisfied controls span, by theme:
 These five controls require GitHub repository-settings changes that are
 **unavailable on this repository** and cannot be satisfied by any file we add:
 
-| Control       | Level | Requires                                   |
-| ------------- | ----- | ------------------------------------------ |
-| `OSPS-AC-03.01` | L1  | Branch protection: require PRs to `main`   |
-| `OSPS-AC-03.02` | L1  | Branch protection: block deletion of `main`|
-| `OSPS-QA-03.01` | L2  | Branch protection: required status checks  |
-| `OSPS-QA-07.01` | L3  | Branch protection: required review approval |
-| `OSPS-VM-03.01` | L2  | Private vulnerability reporting (PVR)       |
+| Control         | Level | Requires                                    |
+| --------------- | ----- | ------------------------------------------- |
+| `OSPS-AC-03.01` | L1    | Branch protection: require PRs to `main`    |
+| `OSPS-AC-03.02` | L1    | Branch protection: block deletion of `main` |
+| `OSPS-QA-03.01` | L2    | Branch protection: required status checks   |
+| `OSPS-QA-07.01` | L3    | Branch protection: required review approval |
+| `OSPS-VM-03.01` | L2    | Private vulnerability reporting (PVR)       |
 
 **Why blocked.** `uwu-tools/scorecard-mcp` is a **private** repository owned by
 the `uwu-tools` organization on a **free** plan. Both the modern
@@ -146,7 +146,7 @@ controls while the repo is private on the free plan.
 **Two independent constraints keep these unfixable for now:**
 
 - The repository must remain **private** (organizational policy). Making it
-  public — which would enable rulesets, branch protection, *and* PVR for free —
+  public — which would enable rulesets, branch protection, _and_ PVR for free —
   is not an option at this time.
 - The `uwu-tools` org **will not be upgraded** to a paid plan (GitHub Team) at
   this time. (Even if it were, `VM-03.01` would remain out of reach: **Private
@@ -163,24 +163,24 @@ all five without further work here.
 `darnit` can auto-generate files that satisfy these controls, but we chose **not**
 to create them in this repository:
 
-| Control       | Level | Would document                              |
-| ------------- | ----- | ------------------------------------------- |
-| `OSPS-SA-01.01` | L2  | Design/architecture (actions & actors)      |
-| `OSPS-SA-03.01` | L2  | Security assessment before major releases    |
-| `OSPS-SA-03.02` | L3  | Threat model                                 |
-| `OSPS-QA-06.02` | L3  | Testing instructions                         |
-| `OSPS-QA-02.02` | L3  | SBOM delivered with compiled assets          |
-| `OSPS-BR-07.02` | L3  | Secrets/credentials management policy        |
-| `OSPS-DO-03.02` | L3  | How to verify release-author identity        |
-| `OSPS-DO-05.01` | L3  | End-of-support (EOL) policy                  |
-| `OSPS-VM-04.02` | L3  | VEX policy (in `SECURITY.md`)                |
-| `OSPS-VM-05.01` | L3  | SCA (dependency) remediation policy          |
-| `OSPS-VM-06.01` | L3  | SAST remediation policy                      |
+| Control         | Level | Would document                            |
+| --------------- | ----- | ----------------------------------------- |
+| `OSPS-SA-01.01` | L2    | Design/architecture (actions & actors)    |
+| `OSPS-SA-03.01` | L2    | Security assessment before major releases |
+| `OSPS-SA-03.02` | L3    | Threat model                              |
+| `OSPS-QA-06.02` | L3    | Testing instructions                      |
+| `OSPS-QA-02.02` | L3    | SBOM delivered with compiled assets       |
+| `OSPS-BR-07.02` | L3    | Secrets/credentials management policy     |
+| `OSPS-DO-03.02` | L3    | How to verify release-author identity     |
+| `OSPS-DO-05.01` | L3    | End-of-support (EOL) policy               |
+| `OSPS-VM-04.02` | L3    | VEX policy (in `SECURITY.md`)             |
+| `OSPS-VM-05.01` | L3    | SCA (dependency) remediation policy       |
+| `OSPS-VM-06.01` | L3    | SAST remediation policy                   |
 
 **Why deferred.** Much of this documentation — architecture, threat model,
 security-assessment cadence, EOL and secrets policy, and the VEX/SCA/SAST
 remediation policies that would live in `SECURITY.md` — is properly owned by the
-*hosting project* once upstreamed. Authoring standalone versions during
+_hosting project_ once upstreamed. Authoring standalone versions during
 incubation risks producing throwaway artifacts that diverge from, or contradict,
 `ossf/scorecard`'s own policies. This mirrors the deferral logic already applied
 to the live provider and release automation in
@@ -188,9 +188,9 @@ to the live provider and release automation in
 
 **Two nuances to revisit if incubation lengthens:**
 
-- `SBOM` (`QA-02.02`) is not a doc but a *build output*. Because this repo does
+- `SBOM` (`QA-02.02`) is not a doc but a _build output_. Because this repo does
   intend to ship a compiled Go binary during incubation (`has_compiled_assets:
-  true`), if standalone releases begin before upstreaming, SBOM generation
+true`), if standalone releases begin before upstreaming, SBOM generation
   should be wired into the release workflow at that point.
 - The VEX/SCA/SAST policies (`VM-04.02`, `VM-05.01`, `VM-06.01`) are small
   additions to the existing `SECURITY.md`. If a self-contained baseline posture
@@ -202,13 +202,13 @@ to the live provider and release automation in
 These could not be determined automatically and relate to build/release
 integrity and provenance — capabilities this project has **not** implemented yet:
 
-| Control       | Level | Concerns                                    |
-| ------------- | ----- | ------------------------------------------- |
-| `OSPS-QA-01.01` | L1  | Public CI/build configuration               |
-| `OSPS-BR-01.03` | L1  | Build/release pipeline integrity            |
-| `OSPS-BR-01.04` | L3  | Build/release pipeline integrity            |
-| `OSPS-BR-02.01` | L2  | Release provenance / signed releases        |
-| `OSPS-BR-02.02` | L3  | Release provenance / signed releases        |
+| Control         | Level | Concerns                             |
+| --------------- | ----- | ------------------------------------ |
+| `OSPS-QA-01.01` | L1    | Public CI/build configuration        |
+| `OSPS-BR-01.03` | L1    | Build/release pipeline integrity     |
+| `OSPS-BR-01.04` | L3    | Build/release pipeline integrity     |
+| `OSPS-BR-02.01` | L2    | Release provenance / signed releases |
+| `OSPS-BR-02.02` | L3    | Release provenance / signed releases |
 
 **Disposition:** these are satisfied naturally once signed, provenance-emitting
 release automation exists — itself a deferred item in
@@ -281,7 +281,7 @@ dogfoods the consumer described in
 - **Exact CI check contexts** (mapped from live check runs on `main`, for anyone
   configuring required status checks): `build-test`, `lint`, `super-linter`,
   `dependency-review`, `Run zizmor`, `Analyze (go)`, `Analyze (actions)`,
-  `Scorecard analysis`, `update-go_modules-graph`. Contexts are the job *names*
+  `Scorecard analysis`, `update-go_modules-graph`. Contexts are the job _names_
   where a job sets one (e.g. `Run zizmor`, not `zizmor`), which matters for exact
   matching in a ruleset.
 - **`get_project_config` can read stale.** After editing `.project/*.yaml`

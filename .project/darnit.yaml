@@ -1,14 +1,15 @@
+---
 # .project/darnit.yaml - Darnit Extension
 #
 # Extension fields for security tooling (OpenSSF Baseline, etc.)
 # Standard CNCF .project fields are in project.yaml
 
 slug: scorecard-mcp
-project_lead: '@justaugustus'
-cncf_slack_channel: ''
+project_lead: "@justaugustus"
+cncf_slack_channel: ""
 package_managers:
   gomod: go.mod
-version: '1.0'
+version: "1.0"
 controls: {}
 context:
   has_subprojects: false
@@ -19,6 +20,6 @@ context:
   platform: github
   primary_language: go
   maintainers:
-  - '@justaugustus'
+    - "@justaugustus"
   security_contact: See SECURITY.md
   governance_model: meritocracy

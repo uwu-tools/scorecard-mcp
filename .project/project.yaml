@@ -1,12 +1,13 @@
+---
 # .project/project.yaml - CNCF Project Configuration
 # https://github.com/cncf/automation/tree/main/utilities/dot-project
-# 
+#
 # This file contains standard CNCF .project fields.
 # Extension fields are in separate files (darnit.yaml, etc.)
 
 name: scorecard-mcp
 description: A Model Context Protocol (MCP) server for OpenSSF Scorecard.
-schema_version: '1.0'
+schema_version: "1.0"
 type: software
 maturity_log: []
 repositories:

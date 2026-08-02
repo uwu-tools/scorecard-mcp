@@ -2,13 +2,16 @@
 name: "CodeQL Advanced"
 
 on:
-  # TODO(repo-visibility): Uncomment once repo is public
+  # TODO(repo-visibility): Uncomment push/pull_request/schedule once repo is public
   #push:
   #  branches: ["main"]
   #pull_request:
   #  branches: ["main"]
   #schedule:
   #  - cron: "33 19 * * 4"
+  # Keep the workflow valid (an empty `on:` fails every run) and allow manual testing
+  # until the automatic triggers above are restored.
+  workflow_dispatch:
 
 # Declare default permissions as none
 permissions: {}
