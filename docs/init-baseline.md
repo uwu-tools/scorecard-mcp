@@ -11,7 +11,7 @@ upstreaming PR — can reconstruct the reasoning rather than re-derive it.
 ## Overview
 
 The [OpenSSF Baseline](https://baseline.openssf.org) is a tiered catalog of
-security-hygiene controls for open-source projects, organized into three maturity
+security-hygiene controls for open source projects, organized into three maturity
 levels (L1 → L3). Controls carry IDs of the form `OSPS-<domain>-<n>.<m>` across
 domains such as Access Control (`AC`), Build & Release (`BR`), Documentation
 (`DO`), Governance (`GV`), Legal (`LE`), Quality Assurance (`QA`), Security

@@ -165,7 +165,7 @@ mismatches. Go commands were run with the stray `GOROOT` unset
 
 ## Phase 5 — Repository scaffolding
 
-Standard open-source repository structure was added, adapted to this project:
+Standard open source repository structure was added, adapted to this project:
 
 - **Community-health files:** Code of Conduct (Contributor Covenant 2.1),
   CONTRIBUTING (with a DCO sign-off requirement), SECURITY (GitHub private
