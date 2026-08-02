@@ -173,10 +173,11 @@ func registerResultTools(s *mcp.Server, p provider.Provider, cat *catalog.Catalo
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name: "get_check_result",
-		Description: "Return the full result (score, reason, details) for a single named OpenSSF " +
-			"Scorecard check on one repository. Use list_checks to discover valid check names and " +
-			"explain_check for a check's methodology and remediation. Data comes from the OpenSSF " +
-			"Scorecard REST API.",
+		Description: "Return the result (score, reason, details) for a single named OpenSSF " +
+			"Scorecard check on one repository. Detail lines are capped (default 50; adjust with " +
+			"max_details), and details_truncated and details_total report any truncation. Use " +
+			"list_checks to discover valid check names and explain_check for a check's methodology " +
+			"and remediation. Data comes from the OpenSSF Scorecard REST API.",
 		Annotations: readOnlyAnnotations("Get one Scorecard check result", true),
 		InputSchema: inputSchemaFor[getCheckResultInput](func(s *jsonschema.Schema) {
 			s.Properties["commit"].Pattern = commitPattern
