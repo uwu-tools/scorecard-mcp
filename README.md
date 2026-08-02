@@ -18,17 +18,17 @@ server never asserts that a repository "is secure" or "is insecure."
 
 ## What it provides
 
-**Tools**
+### Tools
 
-| Tool | Description |
-| --- | --- |
-| `get_repo_score` | Aggregate score + per-check summary for a repository |
+| Tool               | Description                                                        |
+| ------------------ | ------------------------------------------------------------------ |
+| `get_repo_score`   | Aggregate score + per-check summary for a repository               |
 | `get_check_result` | Full result (score, reason, details) for one check on a repository |
-| `compare_repos` | Aggregate scores across several repositories |
-| `list_checks` | Catalog of Scorecard checks (offline) |
-| `explain_check` | Methodology, risk, and remediation for one check (offline) |
+| `compare_repos`    | Aggregate scores across several repositories                       |
+| `list_checks`      | Catalog of Scorecard checks (offline)                              |
+| `explain_check`    | Methodology, risk, and remediation for one check (offline)         |
 
-**Resources**
+### Resources
 
 - `scorecard://checks` — index of all checks
 - `scorecard://checks/{name}` — documentation for a single check
@@ -126,12 +126,15 @@ Asking a client "What's the OpenSSF Scorecard for ossf/scorecard?" calls
     "Cached results cover only projects that have opted in via publish_results: true.",
     "The weekly public scan omits the CI-Tests, Contributors, and Dependency-Update-Tool checks."
   ],
-  "attribution": { "data_license": "CDLA-Permissive-2.0", "source_url": "https://api.scorecard.dev" },
+  "attribution": {
+    "data_license": "CDLA-Permissive-2.0",
+    "source_url": "https://api.scorecard.dev"
+  },
   "complete": false
 }
 ```
 
-`commit` is the *target repository's* resolved commit; `scorecard.commit` and
+`commit` is the _target repository's_ resolved commit; `scorecard.commit` and
 `scorecard.version` identify the build of the Scorecard tool that produced the
 result — the two are unrelated and easy to confuse. `complete` reports whether
 the provider ran the full check set (the cached REST provider always reports
