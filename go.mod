@@ -6,7 +6,7 @@ require (
 	github.com/google/jsonschema-go v0.4.3
 	github.com/modelcontextprotocol/go-sdk v1.7.0
 	github.com/ossf/scorecard/v5 v5.5.1-0.20260715062425-64febf8c5229
-	golang.org/x/sync v0.20.0
+	golang.org/x/sync v0.22.0
 )
 
 require (
