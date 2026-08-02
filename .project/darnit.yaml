@@ -1,3 +1,4 @@
+---
 # .project/darnit.yaml - Darnit Extension
 #
 # Extension fields for security tooling (OpenSSF Baseline, etc.)
@@ -6,19 +7,19 @@
 slug: scorecard-mcp
 project_lead: "@justaugustus"
 cncf_slack_channel: ""
-package_managers: {}
+package_managers:
+  gomod: go.mod
 version: "1.0"
 controls: {}
 context:
   has_subprojects: false
-  # Pre-1.0; no tagged releases or published binaries yet.
-  has_releases: false
+  has_releases: true
   is_library: false
-  has_compiled_assets: false
+  has_compiled_assets: true
   ci_provider: github
   platform: github
+  primary_language: go
   maintainers:
     - "@justaugustus"
-    - "@uwu-tools/scorecard-mcp-maintainers"
-  security_contact: https://github.com/uwu-tools/scorecard-mcp/security/advisories/new
-  governance_model: bdfl
+  security_contact: See SECURITY.md
+  governance_model: meritocracy

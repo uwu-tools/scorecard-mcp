@@ -1,4 +1,7 @@
 ---
+# TODO(repo-visibility): dependency-review-action only runs on pull_request events, so it
+# can't be disabled via an empty/absent `on:` (GitHub treats that as an invalid workflow file
+# on every push). Rename back to dependency.yml once the repo is public.
 name: dependency
 
 on:
