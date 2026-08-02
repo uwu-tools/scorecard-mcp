@@ -2,12 +2,13 @@
 name: "CodeQL Advanced"
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-  schedule:
-    - cron: "33 19 * * 4"
+  # TODO(repo-visibility): Uncomment once repo is public
+  #push:
+  #  branches: ["main"]
+  #pull_request:
+  #  branches: ["main"]
+  #schedule:
+  #  - cron: "33 19 * * 4"
 
 # Declare default permissions as none
 permissions: {}

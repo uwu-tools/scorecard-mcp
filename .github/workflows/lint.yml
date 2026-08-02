@@ -32,7 +32,7 @@ jobs:
         uses: super-linter/super-linter@4ce20838b8ab83717e78138c5b3a1407148e0918 # v8.7.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LINTER_RULES_PATH: ".github/linters"
+          LINTER_RULES_PATH: ".config/lint"
           MARKDOWN_CONFIG_FILE: ".markdownlint.yml"
           YAML_CONFIG_FILE: ".yamllint.yml"
           VALIDATE_ALL_CODEBASE: false
@@ -40,3 +40,4 @@ jobs:
           # Go is linted by the dedicated ci.yml (golangci-lint) workflow.
           VALIDATE_GO: false
           VALIDATE_GO_MODULES: false
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false

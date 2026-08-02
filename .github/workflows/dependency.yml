@@ -3,8 +3,9 @@ name: dependency
 
 on:
   # Review dependencies on pull requests to the default branch
-  pull_request:
-    branches: ["main"]
+  # TODO(repo-visibility): Uncomment once repo is public
+  #pull_request:
+  #  branches: ["main"]
 
 # Declare default permissions as none
 permissions: {}
