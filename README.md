@@ -114,6 +114,8 @@ Asking a client "What's the OpenSSF Scorecard for ossf/scorecard?" calls
 {
   "repo": { "platform": "github.com", "org": "ossf", "name": "scorecard" },
   "commit": "64febf8c5229...",
+  "date": "2026-08-01T02:19:41Z",
+  "scorecard": { "version": "v5.3.0", "commit": "c22063e786c1..." },
   "source": "cached-rest",
   "score": 8.7,
   "checks": [
@@ -124,9 +126,16 @@ Asking a client "What's the OpenSSF Scorecard for ossf/scorecard?" calls
     "Cached results cover only projects that have opted in via publish_results: true.",
     "The weekly public scan omits the CI-Tests, Contributors, and Dependency-Update-Tool checks."
   ],
-  "attribution": { "data_license": "CDLA-Permissive-2.0", "source_url": "https://api.scorecard.dev" }
+  "attribution": { "data_license": "CDLA-Permissive-2.0", "source_url": "https://api.scorecard.dev" },
+  "complete": false
 }
 ```
+
+`commit` is the *target repository's* resolved commit; `scorecard.commit` and
+`scorecard.version` identify the build of the Scorecard tool that produced the
+result — the two are unrelated and easy to confuse. `complete` reports whether
+the provider ran the full check set (the cached REST provider always reports
+`false`, since it omits three checks — see [Caveats](#caveats)).
 
 ## Caveats
 
@@ -137,10 +146,13 @@ The cached REST provider:
 - omits the `CI-Tests`, `Contributors`, and `Dependency-Update-Tool` checks
   (excluded from the weekly public scan);
 - reports a check or aggregate score of `-1` as **inconclusive** — not a
-  failing score.
-
-Data from the REST API is licensed under
-[CDLA Permissive 2.0](https://cdla.dev/permissive-2-0).
+  failing score. `reason` on an inconclusive check is passed through verbatim
+  from the upstream API and can be a raw internal-error string (e.g. a
+  GitHub token/permissions failure inside Scorecard itself) rather than a
+  descriptive explanation;
+- passes `date` through as returned by `api.scorecard.dev`, which is not
+  normalized to a single format (observed as both a full RFC 3339 timestamp
+  and a bare `YYYY-MM-DD` date depending on the repository).
 
 ## Development
 
@@ -182,3 +194,6 @@ toolchain version mismatch.)
 ## License
 
 Apache 2.0 — see [`LICENSE`](LICENSE).
+
+Data from the REST API is licensed under
+[CDLA Permissive 2.0](https://github.com/ossf/scorecard#scorecard-rest-api).
