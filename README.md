@@ -53,17 +53,30 @@ cd scorecard-mcp
 go build -o bin/scorecard-mcp ./cmd/scorecard-mcp
 ```
 
-> **Troubleshooting:** if `go build` fails with
+> **Troubleshooting:** if `go install` or `go build` fails with
 > `compile: version "X" does not match go tool version "Y"` across many
 > stdlib packages, you have a stray `GOROOT` environment variable pointing at
 > a different Go toolchain than the one on `PATH` (common with multiple Go
-> version managers, e.g. gimme). Run `env -u GOROOT go build ...` instead, or
-> unset `GOROOT` in your shell profile.
+> version managers, e.g. gimme). Run `env -u GOROOT go install ...` (or
+> `env -u GOROOT go build ...`) instead, or unset `GOROOT` in your shell
+> profile.
 
 The server speaks MCP over **stdio**; no credentials are required for the cached
 REST provider.
 
 ## Configure your MCP client
+
+> `go install` places the binary in `$(go env GOPATH)/bin` (or `$GOBIN` if
+> set), which is **not on `PATH` by default** on most systems. Either add
+> that directory to `PATH`, or use its absolute path
+> (`$(go env GOPATH)/bin/scorecard-mcp`) in the configs below.
+
+**Claude Code** — register globally with the CLI instead of hand-editing
+JSON:
+
+```sh
+claude mcp add scorecard --scope user -- "$(go env GOPATH)/bin/scorecard-mcp"
+```
 
 **Claude Desktop / Claude Code** (`.mcp.json` or the app's MCP config):
 
