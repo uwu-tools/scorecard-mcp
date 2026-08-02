@@ -37,6 +37,11 @@ jobs:
           YAML_CONFIG_FILE: ".yamllint.yml"
           VALIDATE_ALL_CODEBASE: false
           MULTI_STATUS: false
+          # Biome targets JS/TS/CSS projects; this repo has none, and its
+          # default formatting conflicts with Prettier (which already covers
+          # our incidental JSON files).
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_BIOME_LINT: false
           # Go is linted by the dedicated ci.yml (golangci-lint) workflow.
           VALIDATE_GO: false
           VALIDATE_GO_MODULES: false

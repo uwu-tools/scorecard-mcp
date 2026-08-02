@@ -1,10 +1,6 @@
 {
   "threshold": 1,
   "reporters": ["consoleFull"],
-  "ignore": [
-    ".claude/**",
-    ".github/workflows/**",
-    "**/*_test.go"
-  ],
+  "ignore": [".claude/**", ".github/workflows/**", "**/*_test.go"],
   "absolute": true
 }
