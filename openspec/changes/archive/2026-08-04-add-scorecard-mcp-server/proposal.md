@@ -3,7 +3,7 @@
 ## Why
 
 OpenSSF Scorecard produces rich, structured security-posture data for open source
-repositories, but today an AI agent can only get at it by scraping the website,
+repositories, but today an AI agent can only get at it by scraping the site,
 hand-rolling REST calls, or shelling out to the CLI and parsing output. There is
 no first-class, agent-native way to ask "what are this repo's security signals?"
 and get back structured, provenance-tagged data. An MCP server closes that gap —

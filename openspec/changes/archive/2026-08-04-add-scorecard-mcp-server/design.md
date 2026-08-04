@@ -7,15 +7,15 @@ results (an aggregate score plus per-check scores, reasons, and details). Today 
 AI agent can only reach that data by scraping the site, hand-rolling REST calls, or
 shelling out to the CLI and parsing output. This change adds an **MCP server** — a
 process that speaks the Model Context Protocol so MCP clients (Claude Desktop/Code,
-etc.) can call well-typed *tools* and read *resources* instead.
+etc.) can call well-typed _tools_ and read _resources_ instead.
 
 Key facts established during discovery (both from the local `ossf/scorecard` and
 `scorecard-webapp` clones and from `darnit`):
 
 - **`pkg/scorecard.Run` is importable out-of-tree.** Go's `internal/` visibility
   rule only blocks an external module from importing Scorecard's `internal/…`
-  packages *directly*; the public `pkg/scorecard` (which itself uses those internal
-  packages) compiles fine when we import it. So live scanning does not *require*
+  packages _directly_; the public `pkg/scorecard` (which itself uses those internal
+  packages) compiles fine when we import it. So live scanning does not _require_
   living in-tree — in-tree is the endgame for ecosystem/distribution reasons.
 - **The check catalog is available offline.** `github.com/ossf/scorecard/v5/docs/checks`
   is a public package (`checks.Read()` → per-check name, risk, short, description,
@@ -53,12 +53,12 @@ packaging, reimplementing Scorecard's scoring, and darnit-side adapter code.
 ### D1 — Language & SDK: Go + official `go-sdk`
 
 Go matches the Scorecard ecosystem and lets us import `pkg/scorecard` directly.
-Use `github.com/modelcontextprotocol/go-sdk`. *Alternatives:* Python/FastMCP or the
+Use `github.com/modelcontextprotocol/go-sdk`. _Alternatives:_ Python/FastMCP or the
 TS SDK (rejected — a language mismatch with the in-tree endgame and a rewrite later).
 
 ### D2 — `ResultProvider` is the central extensibility seam
 
-All tools depend on an interface, not a concrete backend. (An *interface* in Go is a
+All tools depend on an interface, not a concrete backend. (An _interface_ in Go is a
 contract: any type implementing these methods can be substituted.)
 
 ```go
@@ -71,12 +71,12 @@ type ResultProvider interface {
 ```
 
 - **`CachedRESTProvider`** (ships now): GETs `https://api.scorecard.dev/projects/
-  {platform}/{org}/{repo}` (optionally `?commit=`). Public + opted-in repos only.
+{platform}/{org}/{repo}` (optionally `?commit=`). Public + opted-in repos only.
 - **`LocalRunProvider`** (specced, deferred): wraps `pkg/scorecard.Run` for any repo
   a token can access, all checks, fresh results.
 
 Every `Result` records which provider/source produced it, so responses can carry
-accurate caveats. *Alternative:* hardcode the REST client (rejected — forces a rewrite
+accurate caveats. _Alternative:_ hardcode the REST client (rejected — forces a rewrite
 for "live later," the exact trap we're avoiding).
 
 ### D3 — Result data model: a provenance-rich superset of Scorecard JSON v2
@@ -99,7 +99,7 @@ caveats:     [ ... ]           # e.g. "cached: omits CI-Tests/Contributors/Depen
 attribution: { data_license: "CDLA-Permissive-2.0", source_url }
 ```
 
-`checks[].score = -1` is surfaced explicitly as *inconclusive*. We never recompute
+`checks[].score = -1` is surfaced explicitly as _inconclusive_. We never recompute
 scores — we pass through what Scorecard reports.
 
 ### D4 — Determinism / caching contract (for darnit)
@@ -116,18 +116,18 @@ That change is darnit's, not ours.)
 
 ### D5 — Tool surface: five read-only tools, compact-by-default
 
-| Tool | Purpose |
-| --- | --- |
-| `get_repo_score` | Aggregate score + per-check summaries for one repo |
-| `get_check_result` | One check's full detail for one repo |
-| `compare_repos` | Aggregate scores across several repos |
-| `list_checks` | Catalog of checks (offline, from `docs/checks`) |
-| `explain_check` | One check's methodology/risk/remediation (offline) |
+| Tool               | Purpose                                            |
+| ------------------ | -------------------------------------------------- |
+| `get_repo_score`   | Aggregate score + per-check summaries for one repo |
+| `get_check_result` | One check's full detail for one repo               |
+| `compare_repos`    | Aggregate scores across several repos              |
+| `list_checks`      | Catalog of checks (offline, from `docs/checks`)    |
+| `explain_check`    | One check's methodology/risk/remediation (offline) |
 
 - Each tool sets MCP **annotations** (host hints): `readOnlyHint: true`, `title`, and
   `openWorldHint: true` on the network-touching tools. All tools are read-only, so the
   Directory's read/write-split rule is satisfied by construction.
-- **Descriptions are contracts** (say what it does, returns, and does *not* do; point
+- **Descriptions are contracts** (say what it does, returns, and does _not_ do; point
   to sibling tools) but contain **no behavioral instructions** ("always call X") —
   those are treated as prompt injection at Directory review.
 - `get_repo_score` is **compact by default** (score + per-check name/score/short
@@ -161,8 +161,9 @@ as a subcommand (D11).
 ### D9 — Platform + reference parsing
 
 Accept `platform/owner/repo` (platform optional, default `github.com`; `gitlab.com`
-supported), mirroring the cached REST API's coverage and the steiza reference's
-parsing. Azure DevOps and local dirs are possible once the live provider lands.
+supported), mirroring the coverage of the cached REST API and the parsing of the
+steiza reference. Azure DevOps and local dirs are possible once the live provider
+lands.
 
 ### D10 — Licensing / attribution
 
@@ -205,7 +206,7 @@ when the plugin marketplace is blocked) rather than hand-rolling MCP structure.
   (build tag / nested module) and justify in the upstream PR.
 - **Payload size vs. context budget** → compact-by-default + drill-down + truncation
   notes.
-- **`-1` misread as a failing score** → represent and label it as *inconclusive*.
+- **`-1` misread as a failing score** → represent and label it as _inconclusive_.
 - **Concurrent live scans reusing one token** (later) → serialize or use a token pool.
 
 ## Migration Plan
