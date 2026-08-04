@@ -1,3 +1,5 @@
+# Design: Scorecard MCP Server
+
 ## Context
 
 OpenSSF Scorecard evaluates a repository's security posture and emits structured
@@ -33,6 +35,7 @@ Key facts established during discovery (both from the local `ossf/scorecard` and
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Expose Scorecard signals to MCP clients as well-typed, structured tools + resources.
 - Make the data backend swappable via a `ResultProvider` seam (cached REST now,
   in-process live scans later) with no rewrite.
@@ -48,11 +51,13 @@ packaging, reimplementing Scorecard's scoring, and darnit-side adapter code.
 ## Decisions
 
 ### D1 — Language & SDK: Go + official `go-sdk`
+
 Go matches the Scorecard ecosystem and lets us import `pkg/scorecard` directly.
 Use `github.com/modelcontextprotocol/go-sdk`. *Alternatives:* Python/FastMCP or the
 TS SDK (rejected — a language mismatch with the in-tree endgame and a rewrite later).
 
 ### D2 — `ResultProvider` is the central extensibility seam
+
 All tools depend on an interface, not a concrete backend. (An *interface* in Go is a
 contract: any type implementing these methods can be substituted.)
 
@@ -75,12 +80,13 @@ accurate caveats. *Alternative:* hardcode the REST client (rejected — forces a
 for "live later," the exact trap we're avoiding).
 
 ### D3 — Result data model: a provenance-rich superset of Scorecard JSON v2
+
 Tools return **structured output** — MCP lets a tool declare an `outputSchema` (the
 JSON shape it promises) and return `structuredContent` (the typed object) alongside a
 `text` fallback (a JSON string, for hosts that don't yet read structured content). Our
 schema mirrors Scorecard's canonical **JSON v2** and adds provenance/caveats:
 
-```
+```text
 repo:        { platform, org, name }
 commit:      resolved commit SHA (40-hex)
 date:        scan/generation timestamp (RFC3339)
@@ -97,9 +103,10 @@ attribution: { data_license: "CDLA-Permissive-2.0", source_url }
 scores — we pass through what Scorecard reports.
 
 ### D4 — Determinism / caching contract (for darnit)
+
 darnit's `ExecutionContext.get_or_run_tool(tool_key, run_func)` memoizes a tool's JSON
 under a string key so N Baseline controls trigger exactly one run
-(https://github.com/darnitdevorg/darnit/issues/194). To make our output a safe cache
+(<https://github.com/darnitdevorg/darnit/issues/194>). To make our output a safe cache
 entry and reproducible for attestation, **every result includes the resolved commit
 SHA, scan date, and Scorecard version**, and retrieval tools accept an optional
 `commit` argument for immutable historical results. Recommended cache key shape for
@@ -108,8 +115,9 @@ static per-run string today; our commit SHA lets them upgrade to per-repo+commit
 That change is darnit's, not ours.)
 
 ### D5 — Tool surface: five read-only tools, compact-by-default
+
 | Tool | Purpose |
-|---|---|
+| --- | --- |
 | `get_repo_score` | Aggregate score + per-check summaries for one repo |
 | `get_check_result` | One check's full detail for one repo |
 | `compare_repos` | Aggregate scores across several repos |
@@ -127,6 +135,7 @@ That change is darnit's, not ours.)
   outputs are truncated with an explicit note.
 
 ### D6 — Responsible-AI framing lives in `instructions` + payload, never in tool text
+
 MCP servers can set an `instructions` string that the host places in the model's
 system prompt. That is where cross-cutting framing goes: "Scorecard results are
 heuristic signals, not a verdict; aggregate scores say nothing about individual
@@ -135,6 +144,7 @@ Dependency-Update-Tool." The same caveats ride in each result's `caveats[]`. Fra
 derived from Scorecard's own documented non-goals.
 
 ### D7 — Check catalog as resources (offline via `docs/checks`)
+
 MCP **resources** are read-only data the host can pull into context (as opposed to
 tools the model calls). Expose the catalog as `scorecard://checks` (index) and a
 template `scorecard://checks/{name}` (one check), sourced from the importable
@@ -142,21 +152,25 @@ template `scorecard://checks/{name}` (one check), sourced from the importable
 version. `list_checks`/`explain_check` return the same data for model-initiated use.
 
 ### D8 — Transport structuring: one factory, stdio now, HTTP later
+
 A single transport-agnostic `newServer()` registers all tools/resources and the
 `instructions`. The entrypoint chooses the transport binding — stdio now, Streamable
 HTTP behind a flag later. This is exactly the shape that drops into `ossf/scorecard`
 as a subcommand (D11).
 
 ### D9 — Platform + reference parsing
+
 Accept `platform/owner/repo` (platform optional, default `github.com`; `gitlab.com`
 supported), mirroring the cached REST API's coverage and the steiza reference's
 parsing. Azure DevOps and local dirs are possible once the live provider lands.
 
 ### D10 — Licensing / attribution
+
 Surface a data-license/attribution note (`CDLA-Permissive-2.0` + source URL) in
 results and in the catalog resource. Repo code is Apache-2.0.
 
 ### D11 — Upstreaming path to an in-tree `scorecard mcp` subcommand
+
 `cmd/serve.go` (the existing HTTP interface) is the template. The server core lives in
 a package that the eventual `cmd/mcp.go` wires as `mcpCmd(o *options.Options)` +
 `AddCommand(...)` in `cmd/root.go`, reusing Scorecard's `makeRepo()` routing and
@@ -165,14 +179,16 @@ stay isolated under `cmd/` (a build tag or a nested module is decided with maint
 at upstream time). Match the Scorecard Go toolchain version to avoid CI friction.
 
 ### D12 — Auth for the deferred live provider
+
 `LocalRunProvider` will rely entirely on the library's roundtripper (env-var tokens,
 GitHub App, GitLab, automatic rate-limit handling). Caution for later: a single token
 is not safe across concurrent scans.
 
 ### D13 — Development methodology (recorded so future sessions follow it)
+
 This project is built spec-first with **OpenSpec** and with the **MCP dev Agent
 Skills** (`build-mcp-server` and friends;
-https://modelcontextprotocol.io/docs/2026-07-28/develop/build-with-agent-skills).
+<https://modelcontextprotocol.io/docs/2026-07-28/develop/build-with-agent-skills>).
 Future agents should install and use them (see `AGENTS.md` for the install fallback
 when the plugin marketplace is blocked) rather than hand-rolling MCP structure.
 
@@ -195,6 +211,7 @@ when the plugin marketplace is blocked) rather than hand-rolling MCP structure.
 ## Migration Plan
 
 Greenfield — no data migration or rollback needed. Phased rollout:
+
 1. **This change:** `CachedRESTProvider`, stdio transport, five tools + catalog
    resources, structured output with provenance + caveats.
 2. **Later:** `LocalRunProvider` (`pkg/scorecard.Run`) with progress + cancellation;
