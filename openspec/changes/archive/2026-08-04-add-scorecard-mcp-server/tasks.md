@@ -57,16 +57,16 @@
 - [x] 9.1 Map each spec scenario (mcp-server, scorecard-results, check-catalog) to a test case
 - [x] 9.2 Integration test: initialize over an in-memory transport, list tools/resources, invoke each tool with a fake provider
 - [x] 9.3 Run `golangci-lint` (0 issues) and `go test ./...` clean
-- [ ] 9.4 Manual smoke test with the MCP Inspector (ad hoc stdio smoke test done; Inspector pending)
+- [x] 9.4 Manual smoke test with the MCP Inspector (Inspector CLI over stdio: initialize; `tools/list` (5 tools with schemas + annotations); `resources/list` + `resources/templates/list`; `list_checks` returned 20 checks; `explain_check` ok path + unknown-check error path; `resources/read scorecard://checks`; `get_repo_score` returned a live score over the network)
 
 ## 10. Documentation and distribution
 
 - [x] 10.1 README: what it is, install, MCP client (stdio) configuration, example tool calls, and the cached-data caveats/attribution
 - [x] 10.2 Provide a client config example (Claude `.mcp.json` and VS Code `.vscode/mcp.json` entries in the README)
-- [ ] 10.3 Add goreleaser/ko config to build a single static binary (deferred; aligns with upstreaming)
+- [ ] 10.3 Add goreleaser/ko config to build a single static binary (deferred; carried forward to the upstreaming effort — release tooling lands with the in-tree `cmd/mcp` move, not in this change)
 
 ## 11. Change closeout
 
 - [x] 11.1 `openspec validate add-scorecard-mcp-server --strict` passes against the implemented behavior
 - [x] 11.2 Update `AGENTS.md`/README if any convention changed during implementation (README added)
-- [ ] 11.3 Archive the OpenSpec change (`openspec archive add-scorecard-mcp-server`) once implemented and merged
+- [x] 11.3 Archive the OpenSpec change (`openspec archive add-scorecard-mcp-server`) once implemented and merged
