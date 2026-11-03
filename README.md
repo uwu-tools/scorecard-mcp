@@ -1,5 +1,20 @@
 # `scorecard-mcp`
 
+> [!IMPORTANT]
+> **This repository is archived.** The server now ships in
+> [OpenSSF Scorecard](https://github.com/ossf/scorecard) as `scorecard mcp`,
+> imported with this repository's history and specs in
+> [ossf/scorecard#5402](https://github.com/ossf/scorecard/pull/5402).
+> Install `scorecard` and register `scorecard mcp` as a stdio server:
+>
+> ```sh
+> go install github.com/ossf/scorecard/v5@main  # until a release includes it
+> ```
+>
+> See [`docs/mcp.md`](https://github.com/ossf/scorecard/blob/main/docs/mcp.md)
+> for client setup, and file issues on
+> [ossf/scorecard](https://github.com/ossf/scorecard/issues).
+
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/uwu-tools/scorecard-mcp/badge)](https://scorecard.dev/viewer/?uri=github.com/uwu-tools/scorecard-mcp)
 
 An [MCP](https://modelcontextprotocol.io) (Model Context Protocol) server for
